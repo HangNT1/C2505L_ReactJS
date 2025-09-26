@@ -1,46 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BookFormComponent from "../components/BookFormComponent";
 
-export default function BookPage() {
+export default function BookPageAPI() {
   //
-  const listBanDau = [
-    {
-      ten: "ten 1",
-      loai: "loai 1",
-      tacgia: "tacgia 1",
-      gia: 79,
-      id: "1",
-    },
-    {
-      ten: "ten 2",
-      loai: "loai 2",
-      tacgia: "tacgia 2",
-      gia: 66,
-      id: "2",
-    },
-    {
-      ten: "ten 3",
-      loai: "loai 3",
-      tacgia: "tacgia 3",
-      gia: 7,
-      id: "3",
-    },
-    {
-      ten: "ten 4",
-      loai: "loai 4",
-      tacgia: "tacgia 4",
-      gia: 85,
-      id: "4",
-    },
-    {
-      ten: "ten 5",
-      loai: "loai 5",
-      tacgia: "tacgia 5",
-      gia: 47,
-      id: "5",
-    },
-  ];
-  const [listBook, setListBook] = useState(listBanDau);
+  const API = "https://688b1d182a52cabb9f50226b.mockapi.io/bai6";
+  const [listBook, setListBook] = useState([]);
+
+  // load data
+  const loadData = async () => {
+    const response = await fetch(API); // lay ra toan bo du lieu
+    const data = await response.json(); // tra ve json
+    setListBook(data);
+  };
+  // Khoi tao load data ngay tu luc ban dau
+  useEffect(() => {
+    loadData();
+  }, []); // CHI GOI LUC DAU
 
   const [form, setForm] = useState({
     ten: "",
@@ -53,26 +28,15 @@ export default function BookPage() {
   // idUpdate = null => Add
   // !=null => Update
   const [id, setId] = useState(6); // gia tri truyen vao = size ban dau  +1
-  function removeBook(id1) {
-    // KHONG DUOC LAM VIEC TRUC TIEP TREN LIST USESTATE => ANH HUONG DEN VIEC RENDER LAI GIAO DIEN
-    // COPY LIST BOOK ... => COPY
-    const listCopy = [...listBook];
-    // const objectCopy = {...listBook}
-    // B1: Tim vi tri => findIndex
-    const i = listCopy.findIndex((b) => b.id === id1);
-    // const index = -1;
-    // for(let i = 0 ;i <listCopy.length();i++){
-    //     if(listCopy[i].id === id1){
-    //         index = i;
-    //         break;
-    //     }
-    // }
-    // splice(vi tri)
-    // B2: Xoa ra khoi danh sach
-    listCopy.splice(i, 1); // i: vi tri muon xoa, 1: 1 phan tu can xoa
-    // B3: Thay doi gia tri cua listBook
-    setListBook(listCopy);
-  }
+  // function removeBook(id1) {
+
+  // }
+  const removeBook = async (id) => {
+    await fetch(`${API}/${id}`, {
+      method: "DELETE",
+    });
+    loadData();
+  };
   function removeBook1(index) {
     const listCopy = [...listBook];
     listCopy.splice(index, 1);
@@ -191,7 +155,7 @@ export default function BookPage() {
                 >
                   Remove
                 </button>
-                <button onClick={() => removeBook1(index1)}>Remove1</button>
+                {/* <button onClick={() => removeBook1(index1)}>Remove1</button> */}
               </td>
             </tr>
           ))}
