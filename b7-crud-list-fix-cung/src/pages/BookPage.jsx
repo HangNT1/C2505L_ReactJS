@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import BookFormComponent from "../components/BookFormComponent";
 
 export default function BookPage() {
@@ -142,9 +142,34 @@ export default function BookPage() {
       // diaChi : "Ha noi"
     });
   };
+
+  const search = useRef("");
+
+  function searchName() {
+    const keywork = search.current.value.toLowerCase(); // lay ra gia tri cua o input
+    if (keywork.trim() === "") {
+      setListBook(listBanDau);
+    } else {
+      const listSearch = listBook.filter((b) =>
+        b.ten.toLowerCase().includes(keywork)
+      );
+      setListBook(listSearch);
+    }
+  }
   return (
     <>
       <h1 style={{ textAlign: "center" }}>Quản lý sách trong thư viện</h1>
+      <div style={{ textAlign: "center" }}>
+        <input
+          type="text"
+          placeholder="Search theo ten"
+          style={{ marginRight: 20 }}
+          ref={search}
+        />
+        <button type="button" onClick={searchName}>
+          Search
+        </button>
+      </div>
       <h2 style={{ textAlign: "center" }}>Thông tin của sách</h2>
       <BookFormComponent
         form1={form}
